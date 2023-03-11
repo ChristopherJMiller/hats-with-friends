@@ -13,7 +13,7 @@ client-wasm-opt: client-wasm-bindgen
 client-wasm-bindgen: build-wasm
   wasm-bindgen --out-name client \
     --out-dir web/wasm \
-    --target web target/wasm32-unknown-unknown/wasm-release/hats-with-friends.wasm
+    --target web target/client/wasm32-unknown-unknown/wasm-release/hats-with-friends.wasm
 
 build-wasm:
-  cargo build --profile wasm-release --target wasm32-unknown-unknown
+  cargo build -p client --profile wasm-release --target wasm32-unknown-unknown

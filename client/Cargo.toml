@@ -1,0 +1,9 @@
+[package]
+name = "client"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = "0.10"
+naia-bevy-client  = "0.19"
+shared = { path = "../shared" }

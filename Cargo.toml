@@ -1,16 +1,6 @@
-[package]
-name = "hats-with-friends"
-version = "0.1.0"
-edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-bevy = "0.10"
-
-[features]
-client = []
-server = []
+[workspace]
+resolver = "2"
+members = ["client", "server", "shared"]
 
 [profile.wasm-release]
 inherits = "release"
