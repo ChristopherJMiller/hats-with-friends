@@ -7,5 +7,5 @@ edition = "2021"
 
 [dependencies]
 bevy = "0.10"
-naia-bevy-server  = "0.19"
+naia-bevy-server  = { version = "0.20", features = ["transport_webrtc"] }
 shared = { path = "../shared" }
