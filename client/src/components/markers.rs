@@ -7,4 +7,4 @@ pub struct Predicted;
 pub struct Confirmed;
 
 #[derive(Component)]
-pub struct LocalCursor;
+pub struct FollowPlayer;

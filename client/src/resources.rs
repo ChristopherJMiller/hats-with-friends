@@ -2,8 +2,8 @@ use std::default::Default;
 
 use bevy::asset::Handle;
 use bevy::ecs::{entity::Entity, prelude::Resource};
+use bevy::prelude::StandardMaterial;
 use bevy::render::mesh::Mesh;
-use bevy::sprite::ColorMaterial;
 
 use naia_bevy_client::CommandHistory;
 use shared::messages::KeyCommand;
@@ -25,22 +25,20 @@ impl OwnedEntity {
 #[derive(Resource)]
 pub struct Global {
   pub owned_entity: Option<OwnedEntity>,
-  pub cursor_entity: Option<Entity>,
   pub queued_command: Option<KeyCommand>,
   pub command_history: CommandHistory<KeyCommand>,
-  pub red: Handle<ColorMaterial>,
-  pub blue: Handle<ColorMaterial>,
-  pub yellow: Handle<ColorMaterial>,
-  pub green: Handle<ColorMaterial>,
-  pub white: Handle<ColorMaterial>,
-  pub circle: Handle<Mesh>,
+  pub red: Handle<StandardMaterial>,
+  pub blue: Handle<StandardMaterial>,
+  pub yellow: Handle<StandardMaterial>,
+  pub green: Handle<StandardMaterial>,
+  pub white: Handle<StandardMaterial>,
+  pub player: Handle<Mesh>,
 }
 
 impl Default for Global {
   fn default() -> Self {
     Self {
       owned_entity: None,
-      cursor_entity: None,
       queued_command: None,
       command_history: CommandHistory::default(),
       white: Handle::default(),
@@ -48,7 +46,7 @@ impl Default for Global {
       blue: Handle::default(),
       yellow: Handle::default(),
       green: Handle::default(),
-      circle: Handle::default(),
+      player: Handle::default(),
     }
   }
 }

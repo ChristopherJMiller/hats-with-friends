@@ -1,19 +1,19 @@
-use bevy::ecs::{
-  event::EventReader,
-  system::{Commands, Query, Res, ResMut},
-};
 use bevy::log::info;
-use bevy::math::Vec2;
-use bevy::render::color::Color as BevyColor;
-use bevy::sprite::{MaterialMesh2dBundle, Sprite, SpriteBundle};
 use bevy::transform::components::Transform;
+use bevy::{
+  ecs::{
+    event::EventReader,
+    system::{Commands, Query, Res, ResMut},
+  },
+  prelude::{Handle, Mesh, PbrBundle},
+};
 
 use naia_bevy_client::{
   events::{
     ClientTickEvent, ConnectEvent, DespawnEntityEvent, DisconnectEvent, InsertComponentEvents, MessageEvents,
     RejectEvent, RemoveComponentEvents, SpawnEntityEvent, UpdateComponentEvents,
   },
-  sequence_greater_than, Client, CommandsExt, Random, Replicate, Tick,
+  sequence_greater_than, Client, CommandsExt, Replicate, Tick,
 };
 
 use shared::{
@@ -24,55 +24,16 @@ use shared::{
 };
 
 use crate::{
-  components::{Confirmed, Interp, LocalCursor, Predicted},
+  components::{Confirmed, Interp, Predicted},
   resources::{Global, OwnedEntity},
 };
 
-const SQUARE_SIZE: f32 = 32.0;
-
-pub fn connect_events(
-  mut commands: Commands,
-  mut client: Client,
-  mut global: ResMut<Global>,
-  mut event_reader: EventReader<ConnectEvent>,
-) {
+pub fn connect_events(client: Client, mut event_reader: EventReader<ConnectEvent>) {
   for _ in event_reader.iter() {
     let Ok(server_address) = client.server_address() else {
             panic!("Shouldn't happen");
         };
     info!("Client connected to: {}", server_address);
-
-    // Create entity for Client-authoritative Cursor
-
-    // Position component
-    let position = {
-      let x = 16 * ((Random::gen_range_u32(0, 40) as i16) - 20);
-      let y = 16 * ((Random::gen_range_u32(0, 30) as i16) - 15);
-      Position::new(x, y)
-    };
-
-    // Spawn Cursor Entity
-    let entity = commands
-            // Spawn new Square Entity
-            .spawn_empty()
-            // MUST call this to begin replication
-            .enable_replication(&mut client)
-            // Insert Position component
-            .insert(position)
-            // Insert Cursor marker component
-            .insert(LocalCursor)
-            // return Entity id
-            .id();
-
-    // Insert SpriteBundle locally only
-    commands.entity(entity).insert(MaterialMesh2dBundle {
-      mesh: global.circle.clone().into(),
-      material: global.white.clone(),
-      transform: Transform::from_xyz(0.0, 0.0, 1.0),
-      ..Default::default()
-    });
-
-    global.cursor_entity = Some(entity);
   }
 }
 
@@ -107,18 +68,16 @@ pub fn message_events(
         if let Ok(position) = position_query.get(entity) {
           let prediction_entity = commands
                         .entity(entity)
+                        .remove::<Handle<Mesh>>()
                         .duplicate() // copies all Replicate components as well
-                        .insert(SpriteBundle {
-                            sprite: Sprite {
-                                custom_size: Some(Vec2::new(SQUARE_SIZE, SQUARE_SIZE)),
-                                color: BevyColor::WHITE,
-                                ..Default::default()
-                            },
-                            transform: Transform::from_xyz(0.0, 0.0, 1.0),
-                            ..Default::default()
+                        .insert(PbrBundle {
+                          mesh: global.player.clone(),
+                          material: global.white.clone(),
+                          transform: Transform::from_xyz(0.0, 0.0, 0.0),
+                          ..Default::default()
                         })
                         // insert interpolation component
-                        .insert(Interp::new(*position.x, *position.y))
+                        .insert(Interp::new(*position.x, *position.y, *position.z))
                         // mark as predicted
                         .insert(Predicted)
                         .id();
@@ -171,49 +130,25 @@ pub fn insert_component_events(
         match *shape.value {
           // Square
           ShapeValue::Square => {
-            let color = {
-              match *color.value {
-                ColorValue::Red => BevyColor::RED,
-                ColorValue::Blue => BevyColor::BLUE,
-                ColorValue::Yellow => BevyColor::YELLOW,
-                ColorValue::Green => BevyColor::GREEN,
-              }
-            };
-
-            commands
-                            .entity(entity)
-                            .insert(SpriteBundle {
-                                sprite: Sprite {
-                                    custom_size: Some(Vec2::new(SQUARE_SIZE, SQUARE_SIZE)),
-                                    color,
-                                    ..Default::default()
-                                },
-                                transform: Transform::from_xyz(0.0, 0.0, 0.0),
-                                ..Default::default()
-                            })
-                            // mark as confirmed
-                            .insert(Confirmed);
-          },
-          // Circle
-          ShapeValue::Circle => {
-            let handle = {
+            let material = {
               match *color.value {
                 ColorValue::Red => &global.red,
                 ColorValue::Blue => &global.blue,
                 ColorValue::Yellow => &global.yellow,
                 ColorValue::Green => &global.green,
               }
+              .clone()
             };
+
             commands
-                            .entity(entity)
-                            .insert(MaterialMesh2dBundle {
-                                mesh: global.circle.clone().into(),
-                                material: handle.clone(),
-                                transform: Transform::from_xyz(0.0, 0.0, 0.0),
-                                ..Default::default()
-                            })
-                            // mark as confirmed
-                            .insert(Confirmed);
+              .entity(entity)
+              .insert(PbrBundle {
+                mesh: global.player.clone(),
+                material,
+                transform: Transform::from_xyz(0.0, 0.0, 0.0),
+                ..Default::default()
+              })
+              .insert(Confirmed);
           },
         }
       }
@@ -221,7 +156,9 @@ pub fn insert_component_events(
     for entity in events.read::<Position>() {
       if let Ok(position) = position_query.get(entity) {
         // initialize interpolation
-        commands.entity(entity).insert(Interp::new(*position.x, *position.y));
+        commands
+          .entity(entity)
+          .insert(Interp::new(*position.x, *position.y, *position.z));
       }
     }
   }

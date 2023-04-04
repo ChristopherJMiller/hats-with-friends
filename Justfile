@@ -8,12 +8,13 @@ serve: build-client
 build-client: client-wasm-opt
 
 client-wasm-opt: client-wasm-bindgen
-  wasm-opt -Oz --output web/wasm/client_bg.wasm web/wasm/client_bg.wasm
+  wasm-opt -Oz --output web/wasm/app_bg.wasm web/wasm/app_bg.wasm
 
 client-wasm-bindgen: build-wasm
-  wasm-bindgen --out-name client \
+  wasm-bindgen --out-name app \
+    --no-typescript \
     --out-dir web/wasm \
-    --target web target/client/wasm32-unknown-unknown/wasm-release/hats-with-friends.wasm
+    --target web target/wasm32-unknown-unknown/wasm-release/app.wasm
 
 build-wasm:
-  cargo build -p client --profile wasm-release --target wasm32-unknown-unknown
+  cargo build -p client --lib --profile wasm-release --target wasm32-unknown-unknown

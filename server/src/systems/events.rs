@@ -6,8 +6,8 @@ use bevy::log::info;
 
 use naia_bevy_server::{
   events::{
-    AuthEvents, ConnectEvent, DespawnEntityEvent, DisconnectEvent, ErrorEvent, InsertComponentEvents,
-    RemoveComponentEvents, SpawnEntityEvent, TickEvent, UpdateComponentEvents,
+    AuthEvents, ConnectEvent, DespawnEntityEvent, DisconnectEvent, ErrorEvent, RemoveComponentEvents, SpawnEntityEvent,
+    TickEvent,
   },
   CommandsExt, Random, Server,
 };
@@ -55,9 +55,10 @@ pub fn connect_events(
 
     // Position component
     let position = {
-      let x = 16 * ((Random::gen_range_u32(0, 40) as i16) - 20);
-      let y = 16 * ((Random::gen_range_u32(0, 30) as i16) - 15);
-      Position::new(x, y)
+      let x = Random::gen_range_f32(0.0, 5.0);
+      let y = Random::gen_range_f32(0.0, 5.0);
+      let z = Random::gen_range_f32(0.0, 5.0);
+      Position::new(x as f32, y as f32, z as f32)
     };
 
     // Color component
@@ -111,14 +112,9 @@ pub fn disconnect_events(
     info!("Naia Server disconnected from: {:?}", user.address);
 
     if let Some(entity) = global.user_to_square_map.remove(user_key) {
+      info!("Removing entity");
       commands.entity(entity).despawn();
       server.room_mut(&global.main_room_key).remove_entity(&entity);
-    }
-    if let Some(client_entity) = global.user_to_cursor_map.remove(user_key) {
-      if let Some(server_entity) = global.client_to_server_cursor_map.remove(&client_entity) {
-        commands.entity(server_entity).despawn();
-        server.room_mut(&global.main_room_key).remove_entity(&server_entity);
-      }
     }
   }
 }
@@ -177,77 +173,6 @@ pub fn spawn_entity_events(mut event_reader: EventReader<SpawnEntityEvent>) {
 pub fn despawn_entity_events(mut event_reader: EventReader<DespawnEntityEvent>) {
   for DespawnEntityEvent(_, _) in event_reader.iter() {
     info!("despawned client entity");
-  }
-}
-
-pub fn insert_component_events(
-  mut commands: Commands,
-  mut server: Server,
-  mut global: ResMut<Global>,
-  mut event_reader: EventReader<InsertComponentEvents>,
-  position_query: Query<&Position>,
-) {
-  for events in event_reader.iter() {
-    for (user_key, client_entity) in events.read::<Position>() {
-      info!("insert component into client entity");
-
-      if let Ok(client_position) = position_query.get(client_entity) {
-        // New Position Component
-        let server_position = Position::new(*client_position.x, *client_position.y);
-
-        // New Color component
-        let color = {
-          let color_value = match server.users_count() % 3 {
-            0 => ColorValue::Yellow,
-            1 => ColorValue::Red,
-            2 => ColorValue::Blue,
-            _ => ColorValue::Green,
-          };
-          Color::new(color_value)
-        };
-
-        // New Shape component
-        let shape = Shape::new(ShapeValue::Circle);
-
-        // Spawn entity
-        let server_entity = commands
-                  // Spawn new Square Entity
-                  .spawn_empty()
-                  // MUST call this to begin replication
-                  .enable_replication(&mut server)
-                  // Insert Position component
-                  .insert(server_position)
-                  // Insert Color component
-                  .insert(color)
-                  // Insert Shape component
-                  .insert(shape)
-                  // return Entity id
-                  .id();
-
-        server.room_mut(&global.main_room_key).add_entity(&server_entity);
-
-        global.user_to_cursor_map.insert(user_key, client_entity);
-        global.client_to_server_cursor_map.insert(client_entity, server_entity);
-      }
-    }
-  }
-}
-
-pub fn update_component_events(
-  global: ResMut<Global>,
-  mut event_reader: EventReader<UpdateComponentEvents>,
-  mut position_query: Query<&mut Position>,
-) {
-  for events in event_reader.iter() {
-    for (_user_key, client_entity) in events.read::<Position>() {
-      if let Some(server_entity) = global.client_to_server_cursor_map.get(&client_entity) {
-        if let Ok([client_position, mut server_position]) = position_query.get_many_mut([client_entity, *server_entity])
-        {
-          server_position.x.mirror(&client_position.x);
-          server_position.y.mirror(&client_position.y);
-        }
-      }
-    }
   }
 }
 

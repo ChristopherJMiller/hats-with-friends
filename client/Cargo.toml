@@ -3,6 +3,16 @@ name = "client"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "app"
+path = "src/main.rs"
+
+[lib]
+name = "app"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+
 [dependencies]
 bevy = "0.10"
 naia-bevy-client  = { version = "0.20", features = ["transport_webrtc"] }

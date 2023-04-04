@@ -5,7 +5,6 @@ use naia_bevy_shared::{Property, Replicate, Serde};
 #[derive(Serde, PartialEq, Clone)]
 pub enum ShapeValue {
   Square,
-  Circle,
 }
 
 #[derive(Component, Replicate)]

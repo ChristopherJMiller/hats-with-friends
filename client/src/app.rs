@@ -6,8 +6,8 @@ use bevy::core_pipeline::{clear_color::ClearColor, CorePipelinePlugin};
 use bevy::ecs::schedule::{IntoSystemConfig, IntoSystemConfigs, IntoSystemSetConfig, SystemSet};
 use bevy::input::InputPlugin;
 use bevy::log::LogPlugin;
+use bevy::pbr::PbrPlugin;
 use bevy::render::{color::Color, texture::ImagePlugin, RenderPlugin};
-use bevy::sprite::SpritePlugin;
 use bevy::time::TimePlugin;
 use bevy::transform::TransformPlugin;
 use bevy::window::WindowPlugin;
@@ -16,7 +16,7 @@ use bevy::winit::WinitPlugin;
 use naia_bevy_client::{ClientConfig, Plugin as ClientPlugin, ReceiveEvents};
 use shared::protocol;
 
-use crate::systems::{events, init, input, sync};
+use crate::systems::{camera, events, init, input, sync};
 
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
 struct MainLoop;
@@ -41,7 +41,7 @@ pub fn run() {
         .add_plugin(RenderPlugin::default())
         .add_plugin(ImagePlugin::default())
         .add_plugin(CorePipelinePlugin::default())
-        .add_plugin(SpritePlugin::default())
+        .add_plugin(PbrPlugin::default())
         // Add Naia Client Plugin
         .add_plugin(ClientPlugin::new(ClientConfig::default(), protocol()))
         // Background Color
@@ -72,10 +72,9 @@ pub fn run() {
         .add_systems(
             (
                 input::key_input,
-                input::cursor_input,
                 sync::sync_clientside_sprites,
                 sync::sync_serverside_sprites,
-                sync::sync_cursor_sprite,
+                camera::camera_follow_player,
             )
                 .chain()
                 .in_set(MainLoop),
