@@ -12,9 +12,9 @@ client-wasm-opt: client-wasm-bindgen
 
 client-wasm-bindgen: build-wasm
   wasm-bindgen --out-name app \
-    --no-typescript \
+    --split-linked-modules \
     --out-dir web/wasm \
-    --target web target/wasm32-unknown-unknown/wasm-release/app.wasm
+    --target web target/wasm32-unknown-unknown/wasm-release/app.wasm # Change to bundler target once vite web environment is configured
 
 build-wasm:
   cargo build -p client --lib --profile wasm-release --target wasm32-unknown-unknown
