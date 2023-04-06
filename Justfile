@@ -1,6 +1,6 @@
 
 install-global-deps:
-  cargo install basic-http-server wasm-bindgen-cli
+  cargo install wasm-bindgen-cli
 
 serve: build-client
   yarn workspace web dev
