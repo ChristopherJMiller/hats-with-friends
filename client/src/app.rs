@@ -10,7 +10,7 @@ use bevy::pbr::PbrPlugin;
 use bevy::render::{color::Color, texture::ImagePlugin, RenderPlugin};
 use bevy::time::TimePlugin;
 use bevy::transform::TransformPlugin;
-use bevy::window::WindowPlugin;
+use bevy::window::{WindowPlugin, Window};
 use bevy::winit::WinitPlugin;
 
 use naia_bevy_client::{ClientConfig, Plugin as ClientPlugin, ReceiveEvents};
@@ -34,7 +34,14 @@ pub fn run() {
         .add_plugin(TimePlugin::default())
         .add_plugin(TransformPlugin::default())
         .add_plugin(InputPlugin::default())
-        .add_plugin(WindowPlugin::default())
+        .add_plugin(WindowPlugin {
+            primary_window: Some(Window {
+                fit_canvas_to_parent: true,
+                canvas: Some("#bevy".to_string()),
+                ..Default::default()
+            }),
+            ..Default::default()
+        })
         .add_plugin(AccessibilityPlugin)
         .add_plugin(AssetPlugin::default())
         .add_plugin(WinitPlugin::default())
