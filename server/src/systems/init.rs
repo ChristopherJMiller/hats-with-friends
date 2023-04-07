@@ -16,11 +16,11 @@ pub fn init(mut commands: Commands, mut server: Server) {
       .parse()
       .expect("could not parse Signaling address/port"),
     // IP Address to listen on for UDP WebRTC data channels
-    "0.0.0.0:14192"
+    std::env::var("UDP_WEBRTC").unwrap_or("0.0.0.0:14192".to_string())
       .parse()
       .expect("could not parse WebRTC data address/port"),
     // The public WebRTC IP address to advertise
-    "http://0.0.0.0:14192",
+    &std::env::var("WEBRTC_PUB_URL").unwrap_or("http://0.0.0.0:14192".to_string()),
   );
   let socket = webrtc::Socket::new(&server_addresses, server.socket_config());
   server.listen(socket);
