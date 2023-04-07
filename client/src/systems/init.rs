@@ -21,7 +21,7 @@ pub fn init(
   info!("Starting Hats with Friends");
 
   client.auth(Auth::new("charlie", "12345"));
-  let socket = webrtc::Socket::new(&format!("http://{}:14191", std::env::var!("SERVER_ADDR").unwrap_or("127.0.0.1")), client.socket_config());
+  let socket = webrtc::Socket::new(&format!("http://{}:14191", std::env!("SERVER_ADDR", "127.0.0.1")), client.socket_config());
   client.connect(socket);
 
   // Setup Camera
