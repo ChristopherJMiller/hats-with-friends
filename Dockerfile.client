@@ -20,7 +20,7 @@ ADD Cargo.lock .
 ADD rust-toolchain.toml .
 
 # Build
-RUN SERVER_ADDR=game.hats.luma.chrismiller.xyz just build-client
+RUN SERVER_ADDR=https://game.hats.luma.chrismiller.xyz just build-client
 
 FROM node:current as web_builder
 
