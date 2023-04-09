@@ -3,7 +3,7 @@
 
 Learning about networking and game design via a very silly idea :)
 
-Basis of the project is the [bevy demo provided by the naia team](https://github.com/naia-lib/naia/tree/main/demos/bevy)
+Basis of the project is the [bevy demo provided by the naia project](https://github.com/naia-lib/naia/tree/main/demos/bevy)
 
 ## Setup
 
