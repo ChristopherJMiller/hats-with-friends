@@ -31,7 +31,7 @@ ADD web web
 ADD package.json .
 ADD yarn.lock .
 COPY --from=wasm_builder /build/web/src/wasm /build/web/src/wasm
-COPY --from=wasm_builder /build/client/assets /build/web/public/assets
+ADD client/assets /build/web/public/assets
 
 # Build
 RUN yarn install && yarn workspace web build
