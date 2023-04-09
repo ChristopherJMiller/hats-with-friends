@@ -5,7 +5,11 @@ install-global-deps:
 serve: build-client
   yarn workspace web dev
 
+client:
+  cargo run -p client
+
 build-client: client-wasm-opt
+  cp -r client/assets web/public/
 
 client-wasm-opt: client-wasm-bindgen
   wasm-opt -Oz --output web/src/wasm/app_bg.wasm web/src/wasm/app_bg.wasm

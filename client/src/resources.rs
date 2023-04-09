@@ -1,4 +1,5 @@
 use std::default::Default;
+use std::sync::RwLock;
 
 use bevy::asset::Handle;
 use bevy::ecs::{entity::Entity, prelude::Resource};
@@ -6,7 +7,9 @@ use bevy::prelude::StandardMaterial;
 use bevy::render::mesh::Mesh;
 
 use naia_bevy_client::CommandHistory;
-use shared::messages::KeyCommand;
+use shared::messages::{KeyCommand, Auth};
+
+pub static SESSION_AUTH_DATA: RwLock<Option<Auth>> = RwLock::new(None);
 
 pub struct OwnedEntity {
   pub confirmed: Entity,

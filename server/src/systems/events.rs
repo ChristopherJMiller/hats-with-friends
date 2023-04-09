@@ -21,10 +21,12 @@ use shared::{
 
 use crate::resources::Global;
 
-pub fn auth_events(mut server: Server, mut event_reader: EventReader<AuthEvents>) {
+pub fn auth_events(mut server: Server, mut event_reader: EventReader<AuthEvents>, mut global: ResMut<Global>) {
   for events in event_reader.iter() {
     for (user_key, auth) in events.read::<Auth>() {
-      if auth.username == "charlie" && auth.password == "12345" {
+      if auth.password == "12345" {
+        info!("{} connected to the server.", auth.username);
+        global.user_key_to_username.insert(user_key.clone(), auth.username);
         // Accept incoming connection
         server.accept_connection(&user_key);
       } else {
@@ -112,6 +114,9 @@ pub fn disconnect_events(
     info!("Naia Server disconnected from: {:?}", user.address);
 
     if let Some(entity) = global.user_to_square_map.remove(user_key) {
+      let username = global.user_key_to_username.remove(user_key);
+      info!("{} disconnected from the server.", username.unwrap_or("An unknown player".to_string()));
+
       info!("Removing entity");
       commands.entity(entity).despawn();
       server.room_mut(&global.main_room_key).remove_entity(&entity);

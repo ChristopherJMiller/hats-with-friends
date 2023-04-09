@@ -28,18 +28,22 @@ use crate::{
   resources::{Global, OwnedEntity},
 };
 
-pub fn connect_events(client: Client, mut event_reader: EventReader<ConnectEvent>) {
+use super::connect_status::ConnectionStatus;
+
+pub fn connect_events(client: Client, mut event_reader: EventReader<ConnectEvent>, mut status: ResMut<ConnectionStatus>) {
   for _ in event_reader.iter() {
     let Ok(server_address) = client.server_address() else {
             panic!("Shouldn't happen");
         };
+    *status = ConnectionStatus::LoadingServer;
     info!("Client connected to: {}", server_address);
   }
 }
 
-pub fn reject_events(mut event_reader: EventReader<RejectEvent>) {
+pub fn reject_events(mut event_reader: EventReader<RejectEvent>, mut status: ResMut<ConnectionStatus>) {
   for _ in event_reader.iter() {
     info!("Client rejected from connecting to Server");
+    *status = ConnectionStatus::Rejected;
   }
 }
 
@@ -55,6 +59,7 @@ pub fn message_events(
   mut global: ResMut<Global>,
   mut event_reader: EventReader<MessageEvents>,
   position_query: Query<&Position>,
+  mut status: ResMut<ConnectionStatus>
 ) {
   for events in event_reader.iter() {
     for message in events.read::<EntityAssignmentChannel, EntityAssignment>() {
@@ -62,6 +67,8 @@ pub fn message_events(
 
       let entity = message.entity.get(&client).unwrap();
       if assign {
+        *status = ConnectionStatus::Connected;
+
         info!("gave ownership of entity");
 
         // Here we create a local copy of the Player entity, to use for client-side prediction

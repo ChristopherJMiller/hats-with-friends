@@ -8,21 +8,25 @@ use bevy::input::InputPlugin;
 use bevy::log::LogPlugin;
 use bevy::pbr::PbrPlugin;
 use bevy::render::{color::Color, texture::ImagePlugin, RenderPlugin};
+use bevy::sprite::SpritePlugin;
+use bevy::text::TextPlugin;
 use bevy::time::TimePlugin;
 use bevy::transform::TransformPlugin;
+use bevy::ui::UiPlugin;
 use bevy::window::{WindowPlugin, Window};
 use bevy::winit::WinitPlugin;
 
 use naia_bevy_client::{ClientConfig, Plugin as ClientPlugin, ReceiveEvents};
 use shared::protocol;
 
+use crate::systems::connect_status::ConnectionStatusPlugin;
 use crate::systems::{camera, events, init, input, sync};
 
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
 struct MainLoop;
 
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
-struct Tick;
+pub struct Tick;
 
 pub fn run() {
   App::default()
@@ -48,11 +52,15 @@ pub fn run() {
         .add_plugin(RenderPlugin::default())
         .add_plugin(ImagePlugin::default())
         .add_plugin(CorePipelinePlugin::default())
+        .add_plugin(SpritePlugin::default())
+        .add_plugin(TextPlugin::default())
+        .add_plugin(UiPlugin::default())
         .add_plugin(PbrPlugin::default())
         // Add Naia Client Plugin
         .add_plugin(ClientPlugin::new(ClientConfig::default(), protocol()))
         // Background Color
         .insert_resource(ClearColor(Color::BLACK))
+        .add_plugin(ConnectionStatusPlugin)
         // Startup System
         .add_startup_system(init)
         // Receive Client Events

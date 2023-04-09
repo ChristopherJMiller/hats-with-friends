@@ -20,7 +20,7 @@ pub fn init(mut commands: Commands, mut server: Server) {
       .parse()
       .expect("could not parse WebRTC data address/port"),
     // The public WebRTC IP address to advertise
-    &std::env::var("WEBRTC_PUB_URL").unwrap_or("http://0.0.0.0:14192".to_string()),
+    &std::env::var("WEBRTC_PUB_URL").unwrap_or("http://127.0.0.1:14192".to_string()),
   );
   let socket = webrtc::Socket::new(&server_addresses, server.socket_config());
   server.listen(socket);
@@ -33,5 +33,6 @@ pub fn init(mut commands: Commands, mut server: Server) {
   commands.insert_resource(Global {
     main_room_key,
     user_to_square_map: HashMap::new(),
+    user_key_to_username: HashMap::new(),
   })
 }

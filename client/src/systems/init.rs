@@ -8,9 +8,10 @@ use bevy::render::{
 };
 use naia_bevy_client::{transport::webrtc, Client};
 use shared::messages::Auth;
+use rand::{distributions::Alphanumeric, Rng};
 
 use crate::components::FollowPlayer;
-use crate::resources::Global;
+use crate::resources::{Global, SESSION_AUTH_DATA};
 
 pub fn init(
   mut commands: Commands,
@@ -20,8 +21,19 @@ pub fn init(
 ) {
   info!("Starting Hats with Friends");
 
-  client.auth(Auth::new("charlie", "12345"));
-  let socket = webrtc::Socket::new(&format!("{}", std::env!("SERVER_ADDR", "http://127.0.0.1:14191")), client.socket_config());
+
+  let auth = SESSION_AUTH_DATA.read().expect("Failed to get Auth Singleton").clone().unwrap_or_else(|| {
+    let user: String = rand::thread_rng()
+      .sample_iter(&Alphanumeric)
+      .take(7)
+      .map(char::from)
+      .collect();
+
+    Auth::new(&user, "12345")
+  });
+
+  client.auth(auth);
+  let socket = webrtc::Socket::new(&format!("{}", std::option_env!("SERVER_ADDR").unwrap_or("http://127.0.0.1:14191")), client.socket_config());
   client.connect(socket);
 
   // Setup Camera

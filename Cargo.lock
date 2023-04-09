@@ -1368,6 +1368,7 @@ dependencies = [
  "bevy",
  "cfg-if",
  "naia-bevy-client",
+ "rand",
  "shared",
  "wasm-bindgen",
 ]
