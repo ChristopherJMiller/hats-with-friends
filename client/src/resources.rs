@@ -7,7 +7,7 @@ use bevy::prelude::StandardMaterial;
 use bevy::render::mesh::Mesh;
 
 use naia_bevy_client::CommandHistory;
-use shared::messages::{KeyCommand, Auth};
+use shared::messages::{VectorMoveCommand, Auth};
 
 pub static SESSION_AUTH_DATA: RwLock<Option<Auth>> = RwLock::new(None);
 
@@ -28,8 +28,8 @@ impl OwnedEntity {
 #[derive(Resource)]
 pub struct Global {
   pub owned_entity: Option<OwnedEntity>,
-  pub queued_command: Option<KeyCommand>,
-  pub command_history: CommandHistory<KeyCommand>,
+  pub queued_command: Option<VectorMoveCommand>,
+  pub command_history: CommandHistory<VectorMoveCommand>,
   pub red: Handle<StandardMaterial>,
   pub blue: Handle<StandardMaterial>,
   pub yellow: Handle<StandardMaterial>,

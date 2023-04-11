@@ -8,3 +8,6 @@ pub struct Confirmed;
 
 #[derive(Component)]
 pub struct FollowPlayer;
+
+#[derive(Component)]
+pub struct Player;

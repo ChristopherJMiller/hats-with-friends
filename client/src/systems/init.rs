@@ -9,6 +9,7 @@ use bevy::render::{
 use naia_bevy_client::{transport::webrtc, Client};
 use shared::messages::Auth;
 use rand::{distributions::Alphanumeric, Rng};
+use smooth_bevy_cameras::controllers::orbit::{OrbitCameraBundle, OrbitCameraController};
 
 use crate::components::FollowPlayer;
 use crate::resources::{Global, SESSION_AUTH_DATA};
@@ -42,7 +43,8 @@ pub fn init(
       transform: Transform::from_xyz(0.0, 6., -12.0).looking_at(Vec3::new(0., 1., 0.), Vec3::Y),
       ..Default::default()
     })
-    .insert(FollowPlayer);
+    .insert(FollowPlayer)
+    .insert(OrbitCameraBundle::new(OrbitCameraController::default(), Vec3::new(-2.0, 5.0, 5.0), Vec3::ZERO, Vec3::Y));
 
   // Lights
   commands.spawn(PointLightBundle {

@@ -15,7 +15,8 @@ use bevy::transform::TransformPlugin;
 use bevy::ui::UiPlugin;
 use bevy::window::{WindowPlugin, Window};
 use bevy::winit::WinitPlugin;
-
+use smooth_bevy_cameras::LookTransformPlugin;
+use smooth_bevy_cameras::controllers::orbit::OrbitCameraPlugin;
 use naia_bevy_client::{ClientConfig, Plugin as ClientPlugin, ReceiveEvents};
 use shared::protocol;
 
@@ -61,6 +62,8 @@ pub fn run() {
         // Background Color
         .insert_resource(ClearColor(Color::BLACK))
         .add_plugin(ConnectionStatusPlugin)
+        .add_plugin(LookTransformPlugin)
+        .add_plugin(OrbitCameraPlugin::new(true))
         // Startup System
         .add_startup_system(init)
         // Receive Client Events
@@ -90,6 +93,7 @@ pub fn run() {
                 sync::sync_clientside_sprites,
                 sync::sync_serverside_sprites,
                 camera::camera_follow_player,
+                camera::camera_input_map,
             )
                 .chain()
                 .in_set(MainLoop),

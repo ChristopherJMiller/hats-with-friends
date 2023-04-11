@@ -16,7 +16,7 @@ use shared::{
   behavior as shared_behavior,
   channels::{EntityAssignmentChannel, PlayerCommandChannel},
   components::{Color, ColorValue, Position, Shape, ShapeValue},
-  messages::{Auth, EntityAssignment, KeyCommand},
+  messages::{Auth, EntityAssignment, VectorMoveCommand},
 };
 
 use crate::resources::Global;
@@ -143,7 +143,7 @@ pub fn tick_events(
     // All game logic should happen here, on a tick event
 
     let mut messages = server.receive_tick_buffer_messages(server_tick);
-    for (_user_key, key_command) in messages.read::<PlayerCommandChannel, KeyCommand>() {
+    for (_user_key, key_command) in messages.read::<PlayerCommandChannel, VectorMoveCommand>() {
       let Some(entity) = &key_command.entity.get(&server) else {
               continue;
           };

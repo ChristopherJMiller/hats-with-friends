@@ -1,22 +1,18 @@
 use naia_bevy_shared::{EntityProperty, Message};
 
 #[derive(Message)]
-pub struct KeyCommand {
+pub struct VectorMoveCommand {
   pub entity: EntityProperty,
-  pub w: bool,
-  pub s: bool,
-  pub a: bool,
-  pub d: bool,
+  pub x: f32,
+  pub y: f32,
 }
 
-impl KeyCommand {
-  pub fn new(w: bool, s: bool, a: bool, d: bool) -> Self {
+impl VectorMoveCommand {
+  pub fn new([x, y]: [f32; 2]) -> Self {
     Self {
       entity: EntityProperty::new_empty(),
-      w,
-      s,
-      a,
-      d,
+      x,
+      y
     }
   }
 }

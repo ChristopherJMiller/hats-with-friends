@@ -36,7 +36,7 @@ const Game = () => {
     <>
       {joinForm}
       {statusText}
-      <canvas className="bevy-instance__canvas" id="bevy"></canvas>
+      <canvas className="bevy-instance__canvas" id="bevy" onContextMenu={(e) => e.preventDefault()}></canvas>
     </>
   );
 };

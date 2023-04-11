@@ -20,9 +20,10 @@ use shared::{
   behavior as shared_behavior,
   channels::{EntityAssignmentChannel, PlayerCommandChannel},
   components::{Color, ColorValue, Position, Shape, ShapeValue},
-  messages::{EntityAssignment, KeyCommand},
+  messages::{EntityAssignment, VectorMoveCommand},
 };
 
+use crate::components::Player;
 use crate::{
   components::{Confirmed, Interp, Predicted},
   resources::{Global, OwnedEntity},
@@ -87,6 +88,7 @@ pub fn message_events(
                         .insert(Interp::new(*position.x, *position.y, *position.z))
                         // mark as predicted
                         .insert(Predicted)
+                        .insert(Player)
                         .id();
 
           global.owned_entity = Some(OwnedEntity::new(entity, prediction_entity));
@@ -256,7 +258,7 @@ pub fn tick_events(
     global.command_history.insert(*client_tick, command.clone());
 
     // Send command
-    client.send_tick_buffer_message::<PlayerCommandChannel, KeyCommand>(client_tick, &command);
+    client.send_tick_buffer_message::<PlayerCommandChannel, VectorMoveCommand>(client_tick, &command);
 
     if let Ok(mut position) = position_query.get_mut(predicted_entity) {
       // Apply command
