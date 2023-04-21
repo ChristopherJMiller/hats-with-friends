@@ -1,7 +1,7 @@
 use bevy::asset::Assets;
 use bevy::ecs::system::{Commands, ResMut};
 use bevy::log::info;
-use bevy::prelude::{Camera3dBundle, PbrBundle, PointLight, PointLightBundle, StandardMaterial, Transform, Vec3};
+use bevy::prelude::{Camera3dBundle, PbrBundle, PointLight, PointLightBundle, StandardMaterial, Transform, Vec2, Vec3};
 use bevy::render::{
   color::Color,
   mesh::{shape, Mesh},
@@ -54,7 +54,10 @@ pub fn init(
     })
     .insert(FollowPlayer)
     .insert(OrbitCameraBundle::new(
-      OrbitCameraController::default(),
+      OrbitCameraController {
+        mouse_rotate_sensitivity: Vec2::splat(0.24),
+        ..Default::default()
+      },
       Vec3::new(-2.0, 5.0, 5.0),
       Vec3::ZERO,
       Vec3::Y,

@@ -1,20 +1,19 @@
 use bevy::log::info;
+use bevy::prelude::Plugin;
 use bevy::transform::components::Transform;
 use bevy::{
   ecs::{
     event::EventReader,
     system::{Commands, Query, Res, ResMut},
   },
-  prelude::{Handle, Mesh, PbrBundle},
+  prelude::*,
 };
 
-use naia_bevy_client::{
-  events::{
-    ClientTickEvent, ConnectEvent, DespawnEntityEvent, DisconnectEvent, InsertComponentEvents, MessageEvents,
-    RejectEvent, RemoveComponentEvents, SpawnEntityEvent, UpdateComponentEvents,
-  },
-  sequence_greater_than, Client, CommandsExt, Replicate, Tick,
-};
+use crate::app::Tick as TickSet;
+
+use naia_bevy_client::events::*;
+use naia_bevy_client::ReceiveEvents;
+use naia_bevy_client::{sequence_greater_than, Client, CommandsExt, Replicate, Tick};
 
 use shared::{
   behavior as shared_behavior,
@@ -268,5 +267,30 @@ pub fn tick_events(
       // Apply command
       shared_behavior::process_command(&command, &mut position);
     }
+  }
+}
+
+pub struct ClientEventPlugin;
+
+impl Plugin for ClientEventPlugin {
+  fn build(&self, app: &mut App) {
+    app.add_systems(
+      (
+          connect_events,
+          disconnect_events,
+          reject_events,
+          spawn_entity_events,
+          despawn_entity_events,
+          insert_component_events,
+          update_component_events,
+          remove_component_events,
+          message_events,
+      )
+          .chain()
+          .in_set(ReceiveEvents),
+      )
+    // Tick Event
+    .configure_set(TickSet.after(ReceiveEvents))
+    .add_system(tick_events.in_set(TickSet));
   }
 }

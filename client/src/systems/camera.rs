@@ -1,4 +1,5 @@
 use crate::{
+  app::MainLoop,
   components::{FollowPlayer, Player},
   resources::Global,
 };
@@ -61,5 +62,13 @@ pub fn camera_follow_player(
         commands.entity(player).push_children(&[camera_ent]);
       });
     }
+  }
+}
+
+pub struct CameraPlugin;
+
+impl Plugin for CameraPlugin {
+  fn build(&self, app: &mut App) {
+    app.add_systems((camera_follow_player, camera_input_map).in_set(MainLoop));
   }
 }

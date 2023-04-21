@@ -20,11 +20,13 @@ use shared::protocol;
 use smooth_bevy_cameras::controllers::orbit::OrbitCameraPlugin;
 use smooth_bevy_cameras::LookTransformPlugin;
 
+use crate::systems::camera::CameraPlugin;
 use crate::systems::connect_status::ConnectionStatusPlugin;
+use crate::systems::events::ClientEventPlugin;
 use crate::systems::{camera, events, init, input, sync};
 
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
-struct MainLoop;
+pub struct MainLoop;
 
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
 pub struct Tick;
@@ -67,33 +69,15 @@ pub fn run() {
         // Startup System
         .add_startup_system(init)
         // Receive Client Events
-        .add_systems(
-            (
-                events::connect_events,
-                events::disconnect_events,
-                events::reject_events,
-                events::spawn_entity_events,
-                events::despawn_entity_events,
-                events::insert_component_events,
-                events::update_component_events,
-                events::remove_component_events,
-                events::message_events,
-            )
-                .chain()
-                .in_set(ReceiveEvents),
-        )
-        // Tick Event
-        .configure_set(Tick.after(ReceiveEvents))
-        .add_system(events::tick_events.in_set(Tick))
+        .add_plugin(ClientEventPlugin)
         // Realtime Gameplay Loop
         .configure_set(MainLoop.after(Tick))
+        .add_plugin(CameraPlugin)
         .add_systems(
             (
                 input::key_input,
                 sync::sync_clientside_sprites,
                 sync::sync_serverside_sprites,
-                camera::camera_follow_player,
-                camera::camera_input_map,
             )
                 .chain()
                 .in_set(MainLoop),
