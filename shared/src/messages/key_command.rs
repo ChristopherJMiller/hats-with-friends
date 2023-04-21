@@ -12,7 +12,7 @@ impl VectorMoveCommand {
     Self {
       entity: EntityProperty::new_empty(),
       x,
-      y
+      y,
     }
   }
 }

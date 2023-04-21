@@ -7,7 +7,7 @@ pub enum ConnectionStatus {
   BeginConnection,
   Rejected,
   LoadingServer,
-  Connected
+  Connected,
 }
 
 impl ToString for ConnectionStatus {
@@ -17,7 +17,8 @@ impl ToString for ConnectionStatus {
       ConnectionStatus::Rejected => "Rejected from Game Server. Wrong Password?",
       ConnectionStatus::LoadingServer => "Loading Server State",
       ConnectionStatus::Connected => "",
-    }.to_string()
+    }
+    .to_string()
   }
 }
 
@@ -25,24 +26,28 @@ impl ToString for ConnectionStatus {
 struct ConnectionStatusText;
 
 fn build_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
-  commands.spawn(TextBundle::from_section(
-    "", 
-    TextStyle {
-      font: asset_server.load("fonts/PTMono-Regular.ttf"),
-      font_size: 32.0,
-      color: Color::WHITE,
-    })
-    .with_text_alignment(TextAlignment::Left)
-    .with_style(Style {
-      position_type: PositionType::Absolute,
-      position: UiRect { 
-        bottom: Val::Px(5.0),
-        left: Val::Px(15.0),
+  commands
+    .spawn(
+      TextBundle::from_section(
+        "",
+        TextStyle {
+          font: asset_server.load("fonts/PTMono-Regular.ttf"),
+          font_size: 32.0,
+          color: Color::WHITE,
+        },
+      )
+      .with_text_alignment(TextAlignment::Left)
+      .with_style(Style {
+        position_type: PositionType::Absolute,
+        position: UiRect {
+          bottom: Val::Px(5.0),
+          left: Val::Px(15.0),
+          ..Default::default()
+        },
         ..Default::default()
-      },
-      ..Default::default()
-    })
-  ).insert(ConnectionStatusText);
+      }),
+    )
+    .insert(ConnectionStatusText);
 }
 
 fn update_ui(status: Res<ConnectionStatus>, mut query: Query<&mut Text, With<ConnectionStatusText>>) {

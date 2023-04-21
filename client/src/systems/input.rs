@@ -25,7 +25,13 @@ fn from_wasd(w: bool, a: bool, s: bool, d: bool, forward_vec: Vec2) -> [f32; 2] 
   result.normalize_or_zero().into()
 }
 
-pub fn key_input(mut global: ResMut<Global>, client: Client, keyboard_input: Res<Input<KeyCode>>, player: Query<&Transform, (With<Player>, Without<FollowPlayer>)>, camera: Query<&GlobalTransform, (With<FollowPlayer>, Without<Player>)>) {
+pub fn key_input(
+  mut global: ResMut<Global>,
+  client: Client,
+  keyboard_input: Res<Input<KeyCode>>,
+  player: Query<&Transform, (With<Player>, Without<FollowPlayer>)>,
+  camera: Query<&GlobalTransform, (With<FollowPlayer>, Without<Player>)>,
+) {
   if let Ok(camera) = camera.get_single() {
     if let Ok(player) = player.get_single() {
       let w = keyboard_input.pressed(KeyCode::W);
@@ -35,7 +41,7 @@ pub fn key_input(mut global: ResMut<Global>, client: Client, keyboard_input: Res
 
       let player_xz = Vec2::new(player.translation.x, player.translation.z);
       let camera_xz = Vec2::new(camera.translation().x, camera.translation().z);
-      
+
       let forward_vec = player_xz - camera_xz;
       let [x, y] = from_wasd(w, a, s, d, forward_vec);
 

@@ -115,7 +115,10 @@ pub fn disconnect_events(
 
     if let Some(entity) = global.user_to_square_map.remove(user_key) {
       let username = global.user_key_to_username.remove(user_key);
-      info!("{} disconnected from the server.", username.unwrap_or("An unknown player".to_string()));
+      info!(
+        "{} disconnected from the server.",
+        username.unwrap_or("An unknown player".to_string())
+      );
 
       info!("Removing entity");
       commands.entity(entity).despawn();

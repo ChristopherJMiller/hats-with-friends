@@ -31,7 +31,11 @@ use crate::{
 
 use super::connect_status::ConnectionStatus;
 
-pub fn connect_events(client: Client, mut event_reader: EventReader<ConnectEvent>, mut status: ResMut<ConnectionStatus>) {
+pub fn connect_events(
+  client: Client,
+  mut event_reader: EventReader<ConnectEvent>,
+  mut status: ResMut<ConnectionStatus>,
+) {
   for _ in event_reader.iter() {
     let Ok(server_address) = client.server_address() else {
             panic!("Shouldn't happen");
@@ -60,7 +64,7 @@ pub fn message_events(
   mut global: ResMut<Global>,
   mut event_reader: EventReader<MessageEvents>,
   position_query: Query<&Position>,
-  mut status: ResMut<ConnectionStatus>
+  mut status: ResMut<ConnectionStatus>,
 ) {
   for events in event_reader.iter() {
     for message in events.read::<EntityAssignmentChannel, EntityAssignment>() {

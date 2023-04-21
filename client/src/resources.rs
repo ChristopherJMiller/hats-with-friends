@@ -7,7 +7,7 @@ use bevy::prelude::StandardMaterial;
 use bevy::render::mesh::Mesh;
 
 use naia_bevy_client::CommandHistory;
-use shared::messages::{VectorMoveCommand, Auth};
+use shared::messages::{Auth, VectorMoveCommand};
 
 pub static SESSION_AUTH_DATA: RwLock<Option<Auth>> = RwLock::new(None);
 

@@ -1,6 +1,6 @@
-use bevy::prelude::{Vec2};
+use bevy::prelude::Vec2;
 
-use crate::{components::Position, messages::{VectorMoveCommand}};
+use crate::{components::Position, messages::VectorMoveCommand};
 
 const SQUARE_SPEED: f32 = 0.5;
 

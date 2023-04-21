@@ -1,14 +1,14 @@
 use bevy::asset::Assets;
 use bevy::ecs::system::{Commands, ResMut};
 use bevy::log::info;
-use bevy::prelude::{Camera3dBundle, PointLight, PointLightBundle, StandardMaterial, Transform, Vec3, PbrBundle};
+use bevy::prelude::{Camera3dBundle, PbrBundle, PointLight, PointLightBundle, StandardMaterial, Transform, Vec3};
 use bevy::render::{
   color::Color,
   mesh::{shape, Mesh},
 };
 use naia_bevy_client::{transport::webrtc, Client};
-use shared::messages::Auth;
 use rand::{distributions::Alphanumeric, Rng};
+use shared::messages::Auth;
 use smooth_bevy_cameras::controllers::orbit::{OrbitCameraBundle, OrbitCameraController};
 
 use crate::components::FollowPlayer;
@@ -22,19 +22,28 @@ pub fn init(
 ) {
   info!("Starting Hats with Friends");
 
+  let auth = SESSION_AUTH_DATA
+    .read()
+    .expect("Failed to get Auth Singleton")
+    .clone()
+    .unwrap_or_else(|| {
+      let user: String = rand::thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(7)
+        .map(char::from)
+        .collect();
 
-  let auth = SESSION_AUTH_DATA.read().expect("Failed to get Auth Singleton").clone().unwrap_or_else(|| {
-    let user: String = rand::thread_rng()
-      .sample_iter(&Alphanumeric)
-      .take(7)
-      .map(char::from)
-      .collect();
-
-    Auth::new(&user, "12345")
-  });
+      Auth::new(&user, "12345")
+    });
 
   client.auth(auth);
-  let socket = webrtc::Socket::new(&format!("{}", std::option_env!("SERVER_ADDR").unwrap_or("http://127.0.0.1:14191")), client.socket_config());
+  let socket = webrtc::Socket::new(
+    &format!(
+      "{}",
+      std::option_env!("SERVER_ADDR").unwrap_or("http://127.0.0.1:14191")
+    ),
+    client.socket_config(),
+  );
   client.connect(socket);
 
   // Setup Camera
@@ -44,7 +53,12 @@ pub fn init(
       ..Default::default()
     })
     .insert(FollowPlayer)
-    .insert(OrbitCameraBundle::new(OrbitCameraController::default(), Vec3::new(-2.0, 5.0, 5.0), Vec3::ZERO, Vec3::Y));
+    .insert(OrbitCameraBundle::new(
+      OrbitCameraController::default(),
+      Vec3::new(-2.0, 5.0, 5.0),
+      Vec3::ZERO,
+      Vec3::Y,
+    ));
 
   // Lights
   commands.spawn(PointLightBundle {

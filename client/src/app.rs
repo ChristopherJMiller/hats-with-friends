@@ -13,12 +13,12 @@ use bevy::text::TextPlugin;
 use bevy::time::TimePlugin;
 use bevy::transform::TransformPlugin;
 use bevy::ui::UiPlugin;
-use bevy::window::{WindowPlugin, Window};
+use bevy::window::{Window, WindowPlugin};
 use bevy::winit::WinitPlugin;
-use smooth_bevy_cameras::LookTransformPlugin;
-use smooth_bevy_cameras::controllers::orbit::OrbitCameraPlugin;
 use naia_bevy_client::{ClientConfig, Plugin as ClientPlugin, ReceiveEvents};
 use shared::protocol;
+use smooth_bevy_cameras::controllers::orbit::OrbitCameraPlugin;
+use smooth_bevy_cameras::LookTransformPlugin;
 
 use crate::systems::connect_status::ConnectionStatusPlugin;
 use crate::systems::{camera, events, init, input, sync};

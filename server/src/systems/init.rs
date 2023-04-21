@@ -12,11 +12,10 @@ pub fn init(mut commands: Commands, mut server: Server) {
 
   // Naia Server initialization
   let server_addresses = webrtc::ServerAddrs::new(
-    "0.0.0.0:14191"
-      .parse()
-      .expect("could not parse Signaling address/port"),
+    "0.0.0.0:14191".parse().expect("could not parse Signaling address/port"),
     // IP Address to listen on for UDP WebRTC data channels
-    std::env::var("UDP_WEBRTC").unwrap_or("0.0.0.0:14192".to_string())
+    std::env::var("UDP_WEBRTC")
+      .unwrap_or("0.0.0.0:14192".to_string())
       .parse()
       .expect("could not parse WebRTC data address/port"),
     // The public WebRTC IP address to advertise

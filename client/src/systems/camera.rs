@@ -1,7 +1,12 @@
-use crate::{components::{FollowPlayer, Player}, resources::{Global}};
-use bevy::{prelude::*, input::mouse::{MouseWheel, MouseMotion, MouseScrollUnit}};
-use smooth_bevy_cameras::{controllers::orbit::{ControlEvent, OrbitCameraController}};
-
+use crate::{
+  components::{FollowPlayer, Player},
+  resources::Global,
+};
+use bevy::{
+  input::mouse::{MouseMotion, MouseScrollUnit, MouseWheel},
+  prelude::*,
+};
+use smooth_bevy_cameras::controllers::orbit::{ControlEvent, OrbitCameraController};
 
 pub fn camera_input_map(
   mut events: EventWriter<ControlEvent>,
@@ -58,4 +63,3 @@ pub fn camera_follow_player(
     }
   }
 }
-
