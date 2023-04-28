@@ -3,10 +3,11 @@ use measurements::Frequency;
 use rapier3d::prelude::*;
 use std::ops::{Deref, DerefMut};
 
-use crate::protocol::TICK_INTERVAL;
+use crate::{protocol::TICK_INTERVAL, components::{PhysicsHandle, Position}};
 
 #[derive(Resource)]
 pub struct PhysicsState {
+  pub client_step: u16,
   pub pipeline: PhysicsPipeline,
   pub islands: IslandManager,
   pub broad_phase: BroadPhase,
@@ -24,6 +25,7 @@ pub struct PhysicsState {
 impl PhysicsState {
   fn new(steps: f32) -> Self {
     Self {
+      client_step: 0,
       pipeline: Default::default(),
       islands: Default::default(),
       broad_phase: Default::default(),
@@ -63,15 +65,28 @@ impl<T: Default> DerefMut for PhysicsSet<T> {
   }
 }
 
+fn sync_rigidbodies(mut query: Query<(&mut Transform, &PhysicsHandle<RigidBodyHandle>)>, rigidbody_sets: Res<PhysicsSet<RigidBodySet>>) {
+  query.for_each_mut(|(mut trans, handle)| {
+    if let Some(rigidbody) = &rigidbody_sets.get(**handle) {
+      let rigidbody_pos = rigidbody.translation();
+      trans.translation.x = rigidbody_pos.x;
+      trans.translation.y = rigidbody_pos.y;
+      trans.translation.z = rigidbody_pos.z;
+    }
+  });
+}
+
 pub struct PhysicsPlugin;
 
 impl Plugin for PhysicsPlugin {
   fn build(&self, app: &mut App) {
     let freq = Frequency::from_period(TICK_INTERVAL);
+    info!("Steps set to {}", freq.as_hertz() as f32);
 
     app
       .insert_resource(PhysicsState::new(freq.as_hertz() as f32))
       .init_resource::<PhysicsSet<ColliderSet>>()
-      .init_resource::<PhysicsSet<RigidBodySet>>();
+      .init_resource::<PhysicsSet<RigidBodySet>>()
+      .add_system(sync_rigidbodies);
   }
 }
