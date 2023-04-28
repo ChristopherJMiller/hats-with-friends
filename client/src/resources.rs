@@ -9,6 +9,8 @@ use bevy::render::mesh::Mesh;
 use naia_bevy_client::CommandHistory;
 use shared::messages::{Auth, VectorMoveCommand};
 
+use crate::systems::input::Controls;
+
 pub static SESSION_AUTH_DATA: RwLock<Option<Auth>> = RwLock::new(None);
 
 pub struct OwnedEntity {
@@ -36,6 +38,7 @@ pub struct Global {
   pub green: Handle<StandardMaterial>,
   pub white: Handle<StandardMaterial>,
   pub player: Handle<Mesh>,
+  pub controls: Controls
 }
 
 impl Default for Global {
@@ -50,6 +53,7 @@ impl Default for Global {
       yellow: Handle::default(),
       green: Handle::default(),
       player: Handle::default(),
+      controls: Controls::default()
     }
   }
 }

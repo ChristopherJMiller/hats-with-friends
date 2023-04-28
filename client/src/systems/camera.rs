@@ -22,6 +22,7 @@ pub fn camera_input_map(
   } else {
     return;
   };
+
   let OrbitCameraController {
     mouse_rotate_sensitivity,
     mouse_wheel_zoom_sensitivity,

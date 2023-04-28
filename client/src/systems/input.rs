@@ -5,7 +5,25 @@ use shared::messages::VectorMoveCommand;
 use crate::components::{FollowPlayer, Player};
 use crate::resources::Global;
 
-fn from_wasd(w: bool, a: bool, s: bool, d: bool, forward_vec: Vec2) -> [f32; 2] {
+pub struct Controls {
+  pub forward: [KeyCode; 2],
+  pub backward: [KeyCode; 2],
+  pub left: [KeyCode; 2],
+  pub right: [KeyCode; 2],
+}
+
+impl Default for Controls {
+  fn default() -> Self {
+    Self { 
+      forward: [KeyCode::W, KeyCode::Up], 
+      backward: [KeyCode::S, KeyCode::Down], 
+      left: [KeyCode::A, KeyCode::Left], 
+      right: [KeyCode::D, KeyCode::Right],
+    }
+  }
+}
+
+fn move_vec_from_input(w: bool, a: bool, s: bool, d: bool, forward_vec: Vec2) -> [f32; 2] {
   let mut result = Vec2::ZERO;
   let right_vec = forward_vec.perp();
 
@@ -25,6 +43,10 @@ fn from_wasd(w: bool, a: bool, s: bool, d: bool, forward_vec: Vec2) -> [f32; 2] 
   result.normalize_or_zero().into()
 }
 
+fn any_keys_pressed(keyboard_input: &Input<KeyCode>, inputs: &[KeyCode]) -> bool {
+  inputs.iter().find(|x| keyboard_input.pressed(**x)).is_some()
+}
+
 pub fn key_input(
   mut global: ResMut<Global>,
   client: Client,
@@ -34,16 +56,16 @@ pub fn key_input(
 ) {
   if let Ok(camera) = camera.get_single() {
     if let Ok(player) = player.get_single() {
-      let w = keyboard_input.pressed(KeyCode::W);
-      let s = keyboard_input.pressed(KeyCode::S);
-      let a = keyboard_input.pressed(KeyCode::A);
-      let d = keyboard_input.pressed(KeyCode::D);
+      let w = any_keys_pressed(&keyboard_input, &global.controls.forward);
+      let s = any_keys_pressed(&keyboard_input, &global.controls.backward);
+      let a = any_keys_pressed(&keyboard_input, &global.controls.left);
+      let d = any_keys_pressed(&keyboard_input, &global.controls.right);
 
       let player_xz = Vec2::new(player.translation.x, player.translation.z);
       let camera_xz = Vec2::new(camera.translation().x, camera.translation().z);
 
       let forward_vec = player_xz - camera_xz;
-      let [x, y] = from_wasd(w, a, s, d, forward_vec);
+      let [x, y] = move_vec_from_input(w, a, s, d, forward_vec);
 
       if let Some(command) = &mut global.queued_command {
         command.x = x;
