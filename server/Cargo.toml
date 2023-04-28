@@ -8,5 +8,5 @@ edition = "2021"
 [dependencies]
 bevy = "0.10"
 naia-bevy-server  = { version = "0.20", features = ["transport_webrtc"] }
-bevy_rapier3d = "0.21"
+bevy_rapier3d = { version = "0.21", features = ["enhanced-determinism", "serde-serialize"] }
 shared = { path = "../shared" }

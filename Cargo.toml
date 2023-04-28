@@ -7,3 +7,6 @@ inherits = "release"
 opt-level = "z"
 lto = "fat"
 codegen-units = 1
+
+[profile.dev.package.bevy_rapier3d]
+opt-level = 3

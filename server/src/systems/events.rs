@@ -4,6 +4,7 @@ use bevy::ecs::{
 };
 use bevy::log::info;
 
+use bevy_rapier3d::prelude::Collider;
 use naia_bevy_server::{
   events::{
     AuthEvents, ConnectEvent, DespawnEntityEvent, DisconnectEvent, ErrorEvent, RemoveComponentEvents, SpawnEntityEvent,
@@ -15,7 +16,7 @@ use naia_bevy_server::{
 use shared::{
   behavior as shared_behavior,
   channels::{EntityAssignmentChannel, PlayerCommandChannel},
-  components::{Color, ColorValue, Position, Shape, ShapeValue},
+  components::{Color, ColorValue, Position, Shape, ShapeValue, ColliderContainer},
   messages::{Auth, EntityAssignment, VectorMoveCommand},
 };
 
@@ -89,6 +90,9 @@ pub fn connect_events(
           .insert(color)
           // Insert Shape component
           .insert(shape)
+          // Collider
+          .insert(ColliderContainer::new(1.0))
+          .insert(Collider::cuboid(1.0, 1.0, 1.0))
           // return Entity id
           .id();
 

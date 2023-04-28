@@ -8,6 +8,8 @@ use bevy::{
   },
   prelude::*,
 };
+use bevy_rapier3d::prelude::Collider;
+use shared::components::ColliderContainer;
 
 use crate::app::Tick as TickSet;
 
@@ -80,6 +82,7 @@ pub fn message_events(
           let prediction_entity = commands
                         .entity(entity)
                         .remove::<Handle<Mesh>>()
+                        .remove::<Collider>()
                         .duplicate() // copies all Replicate components as well
                         .insert(PbrBundle {
                           mesh: global.player.clone(),
@@ -92,6 +95,8 @@ pub fn message_events(
                         // mark as predicted
                         .insert(Predicted)
                         .insert(Player)
+                        // Collider
+                        .insert(Collider::cuboid(1.0, 1.0, 1.0))
                         .id();
 
           global.owned_entity = Some(OwnedEntity::new(entity, prediction_entity));
@@ -131,6 +136,7 @@ pub fn insert_component_events(
   global: Res<Global>,
   sprite_query: Query<(&Shape, &Color)>,
   position_query: Query<&Position>,
+  collider_instruction_query: Query<&ColliderContainer>,
 ) {
   for events in event_reader.iter() {
     for entity in events.read::<Color>() {
@@ -171,6 +177,13 @@ pub fn insert_component_events(
         commands
           .entity(entity)
           .insert(Interp::new(*position.x, *position.y, *position.z));
+      }
+    }
+    for entity in events.read::<ColliderContainer>() {
+      if let Ok(container) = collider_instruction_query.get(entity) {
+        commands
+          .entity(entity)
+          .insert(Collider::cuboid(*container.size, *container.size, *container.size));
       }
     }
   }

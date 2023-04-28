@@ -1,7 +1,15 @@
 use bevy::app::{App, ScheduleRunnerPlugin, ScheduleRunnerSettings};
 use bevy::core::{FrameCountPlugin, TaskPoolPlugin, TypeRegistrationPlugin};
+use bevy::core_pipeline::CorePipelinePlugin;
 use bevy::ecs::schedule::IntoSystemConfigs;
 use bevy::log::{info, LogPlugin};
+use bevy::pbr::PbrPlugin;
+use bevy::prelude::{ImagePlugin, AssetPlugin};
+use bevy::render::RenderPlugin;
+use bevy::scene::ScenePlugin;
+use bevy::time::TimePlugin;
+use bevy::window::{WindowPlugin, ExitCondition};
+use bevy_rapier3d::prelude::*;
 use std::time::Duration;
 
 use naia_bevy_server::{Plugin as ServerPlugin, ReceiveEvents, ServerConfig};
@@ -13,7 +21,7 @@ mod systems;
 use systems::{events, init};
 
 fn main() {
-  info!("Naia Bevy Server Demo starting up");
+  info!("Hats with Friends Server starting up");
 
   // Build App
   App::default()
@@ -25,8 +33,21 @@ fn main() {
             // this is needed to avoid running the server at uncapped FPS
             ScheduleRunnerSettings::run_loop(Duration::from_millis(3)),
         )
+        .add_plugin(AssetPlugin::default())
+        .add_plugin(TimePlugin::default())
+        .add_plugin(WindowPlugin {
+            primary_window: None,
+            exit_condition: ExitCondition::DontExit,
+            ..Default::default()
+        })
+        .add_plugin(ScenePlugin::default())
         .add_plugin(ScheduleRunnerPlugin::default())
+        .add_plugin(RenderPlugin::default())
+        .add_plugin(ImagePlugin::default())
+        .add_plugin(CorePipelinePlugin::default())
+        .add_plugin(PbrPlugin::default())
         .add_plugin(LogPlugin::default())
+        .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(ServerPlugin::new(ServerConfig::default(), protocol()))
         // Startup System
         .add_startup_system(init)
