@@ -8,5 +8,4 @@ edition = "2021"
 [dependencies]
 bevy = "0.10"
 naia-bevy-shared  = "0.20"
-rapier3d = { version = "0.17", features = [ "enhanced-determinism" ] }
-measurements = "0.11"
+bevy_rapier3d = "0.21"

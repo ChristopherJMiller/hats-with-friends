@@ -16,9 +16,7 @@ use bevy::ui::UiPlugin;
 use bevy::window::{Window, WindowPlugin};
 use bevy::winit::WinitPlugin;
 use naia_bevy_client::{ClientConfig, Plugin as ClientPlugin, ReceiveEvents};
-use shared::plugins::physics::PhysicsPlugin;
 use shared::protocol;
-use shared::scene::{build_shared_scene_with_rendering};
 use smooth_bevy_cameras::controllers::orbit::OrbitCameraPlugin;
 use smooth_bevy_cameras::LookTransformPlugin;
 
@@ -68,9 +66,7 @@ pub fn run() {
         .add_plugin(ConnectionStatusPlugin)
         .add_plugin(LookTransformPlugin)
         .add_plugin(OrbitCameraPlugin::new(true))
-        .add_plugin(PhysicsPlugin)
         // Startup System
-        .add_startup_system(build_shared_scene_with_rendering)
         .add_startup_system(init)
         // Receive Client Events
         .add_plugin(ClientEventPlugin)

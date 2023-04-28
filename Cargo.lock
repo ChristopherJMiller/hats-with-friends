@@ -819,6 +819,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a96c24da064370917b92c2a84527e6a73b620c50ac5ef8b1af8c04ccf5256a7c"
 
 [[package]]
+name = "bevy_rapier3d"
+version = "0.21.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b4bce8074f19467fd55ab172ae6c11fca3ca28f66804590ab10c930bd5e9cd24"
+dependencies = [
+ "bevy",
+ "bitflags",
+ "log",
+ "nalgebra",
+ "rapier3d",
+]
+
+[[package]]
 name = "bevy_reflect"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1366,10 +1379,10 @@ name = "client"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "bevy_rapier3d",
  "cfg-if",
  "naia-bevy-client",
  "rand",
- "rapier3d",
  "shared",
  "smooth-bevy-cameras",
  "wasm-bindgen",
@@ -2638,7 +2651,6 @@ checksum = "1885e79c1fc4b10f0e172c475f458b7f7b93061064d98c3293e98c5ba0c8b399"
 dependencies = [
  "autocfg",
  "hashbrown",
- "serde",
 ]
 
 [[package]]
@@ -2933,15 +2945,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "measurements"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5b734b4e8187ea5777bc29c086f0970a27d8de42061b48f5af32cafc0ca904b"
-dependencies = [
- "libm",
-]
-
-[[package]]
 name = "memchr"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3206,6 +3209,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d68d47bba83f9e2006d117a9a33af1524e655516b8919caac694427a6fb1e511"
 dependencies = [
  "approx",
+ "glam",
  "matrixmultiply",
  "nalgebra-macros",
  "num-complex",
@@ -3732,7 +3736,6 @@ dependencies = [
  "bitflags",
  "downcast-rs",
  "either",
- "indexmap",
  "nalgebra",
  "num-derive",
  "num-traits",
@@ -4393,8 +4396,8 @@ name = "server"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "bevy_rapier3d",
  "naia-bevy-server",
- "rapier3d",
  "shared",
 ]
 
@@ -4449,9 +4452,8 @@ name = "shared"
 version = "0.1.0"
 dependencies = [
  "bevy",
- "measurements",
+ "bevy_rapier3d",
  "naia-bevy-shared",
- "rapier3d",
 ]
 
 [[package]]
@@ -4496,7 +4498,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "061507c94fc6ab4ba1c9a0305018408e312e17c041eb63bef8aa726fa33aceae"
 dependencies = [
  "approx",
- "libm",
  "num-complex",
  "num-traits",
  "paste",

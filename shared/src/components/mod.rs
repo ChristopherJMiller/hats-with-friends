@@ -9,9 +9,6 @@ pub use position::Position;
 mod shape;
 pub use shape::{Shape, ShapeValue};
 
-mod physics;
-pub use physics::*;
-
 // Plugin
 pub struct ComponentsPlugin;
 

@@ -2,8 +2,6 @@ use bevy::app::{App, ScheduleRunnerPlugin, ScheduleRunnerSettings};
 use bevy::core::{FrameCountPlugin, TaskPoolPlugin, TypeRegistrationPlugin};
 use bevy::ecs::schedule::IntoSystemConfigs;
 use bevy::log::{info, LogPlugin};
-use shared::plugins::physics::PhysicsPlugin;
-use shared::scene::build_shared_scene_without_rendering;
 use std::time::Duration;
 
 use naia_bevy_server::{Plugin as ServerPlugin, ReceiveEvents, ServerConfig};
@@ -15,7 +13,7 @@ mod systems;
 use systems::{events, init};
 
 fn main() {
-  info!("Hats with Friends Server is starting up");
+  info!("Naia Bevy Server Demo starting up");
 
   // Build App
   App::default()
@@ -30,8 +28,6 @@ fn main() {
         .add_plugin(ScheduleRunnerPlugin::default())
         .add_plugin(LogPlugin::default())
         .add_plugin(ServerPlugin::new(ServerConfig::default(), protocol()))
-        .add_plugin(PhysicsPlugin)
-        .add_startup_system(build_shared_scene_without_rendering)
         // Startup System
         .add_startup_system(init)
         // Receive Server Events

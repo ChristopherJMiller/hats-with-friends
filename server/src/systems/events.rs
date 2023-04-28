@@ -12,13 +12,11 @@ use naia_bevy_server::{
   CommandsExt, Random, Server,
 };
 
-use rapier3d::prelude::{RigidBodySet, ColliderSet};
 use shared::{
   behavior as shared_behavior,
   channels::{EntityAssignmentChannel, PlayerCommandChannel},
   components::{Color, ColorValue, Position, Shape, ShapeValue},
   messages::{Auth, EntityAssignment, VectorMoveCommand},
-  plugins::physics::{PhysicsSet, PhysicsState},
 };
 
 use crate::resources::Global;
@@ -139,9 +137,6 @@ pub fn tick_events(
   mut server: Server,
   mut position_query: Query<&mut Position>,
   mut tick_reader: EventReader<TickEvent>,
-  mut physics_state: ResMut<PhysicsState>,
-  mut rigidbody_set: ResMut<PhysicsSet<RigidBodySet>>,
-  mut collider_set: ResMut<PhysicsSet<ColliderSet>>,
 ) {
   let mut has_ticked = false;
 
@@ -160,8 +155,6 @@ pub fn tick_events(
           };
       shared_behavior::process_command(&key_command, &mut position);
     }
-
-    shared_behavior::step_physics(None, &mut physics_state, &mut rigidbody_set, &mut collider_set);
   }
 
   if has_ticked {
