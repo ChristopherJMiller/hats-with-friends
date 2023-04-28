@@ -46,6 +46,8 @@ pub fn init(
   );
   client.connect(socket);
 
+  // TODO Scene management should be handled by an external scene file so that server and client can share
+
   // Setup Camera
   commands
     .spawn(Camera3dBundle {

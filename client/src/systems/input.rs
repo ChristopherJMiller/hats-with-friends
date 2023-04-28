@@ -14,10 +14,10 @@ pub struct Controls {
 
 impl Default for Controls {
   fn default() -> Self {
-    Self { 
-      forward: [KeyCode::W, KeyCode::Up], 
-      backward: [KeyCode::S, KeyCode::Down], 
-      left: [KeyCode::A, KeyCode::Left], 
+    Self {
+      forward: [KeyCode::W, KeyCode::Up],
+      backward: [KeyCode::S, KeyCode::Down],
+      left: [KeyCode::A, KeyCode::Left],
       right: [KeyCode::D, KeyCode::Right],
     }
   }
@@ -78,3 +78,5 @@ pub fn key_input(
     }
   }
 }
+
+// TODO This needs an InputPlugin

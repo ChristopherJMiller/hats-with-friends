@@ -33,6 +33,8 @@ pub struct MainLoop;
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
 pub struct Tick;
 
+// TODO Clean up this file, bevy plugin group, game logic, network logics
+
 pub fn run() {
   App::default()
         // Bevy Plugins

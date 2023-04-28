@@ -130,6 +130,11 @@ pub fn despawn_entity_events(mut event_reader: EventReader<DespawnEntityEvent>) 
   }
 }
 
+// TODO
+/**
+ * There should be an enum of components to handle each incoming message in a consistant manor
+ */
+
 pub fn insert_component_events(
   mut commands: Commands,
   mut event_reader: EventReader<InsertComponentEvents>,

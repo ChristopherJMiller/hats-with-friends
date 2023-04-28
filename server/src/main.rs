@@ -4,11 +4,11 @@ use bevy::core_pipeline::CorePipelinePlugin;
 use bevy::ecs::schedule::IntoSystemConfigs;
 use bevy::log::{info, LogPlugin};
 use bevy::pbr::PbrPlugin;
-use bevy::prelude::{ImagePlugin, AssetPlugin};
+use bevy::prelude::{AssetPlugin, ImagePlugin};
 use bevy::render::RenderPlugin;
 use bevy::scene::ScenePlugin;
 use bevy::time::TimePlugin;
-use bevy::window::{WindowPlugin, ExitCondition};
+use bevy::window::{ExitCondition, WindowPlugin};
 use bevy_rapier3d::prelude::*;
 use std::time::Duration;
 

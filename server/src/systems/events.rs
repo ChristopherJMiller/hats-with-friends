@@ -16,7 +16,7 @@ use naia_bevy_server::{
 use shared::{
   behavior as shared_behavior,
   channels::{EntityAssignmentChannel, PlayerCommandChannel},
-  components::{Color, ColorValue, Position, Shape, ShapeValue, ColliderContainer},
+  components::{ColliderContainer, Color, ColorValue, Position, Shape, ShapeValue},
   messages::{Auth, EntityAssignment, VectorMoveCommand},
 };
 

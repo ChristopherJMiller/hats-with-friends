@@ -38,7 +38,7 @@ pub struct Global {
   pub green: Handle<StandardMaterial>,
   pub white: Handle<StandardMaterial>,
   pub player: Handle<Mesh>,
-  pub controls: Controls
+  pub controls: Controls,
 }
 
 impl Default for Global {
@@ -53,7 +53,7 @@ impl Default for Global {
       yellow: Handle::default(),
       green: Handle::default(),
       player: Handle::default(),
-      controls: Controls::default()
+      controls: Controls::default(),
     }
   }
 }

@@ -1,7 +1,6 @@
 use bevy::prelude::Component;
 use naia_bevy_shared::{Property, Replicate};
 
-
 #[derive(Component, Replicate)]
 pub struct ColliderContainer {
   pub size: Property<f32>,
