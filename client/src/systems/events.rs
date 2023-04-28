@@ -8,6 +8,8 @@ use bevy::{
   },
   prelude::*,
 };
+use rapier3d::prelude::{RigidBodySet, ColliderSet};
+use shared::plugins::physics::{PhysicsSet, PhysicsState};
 
 use crate::app::Tick as TickSet;
 
@@ -238,6 +240,9 @@ pub fn tick_events(
   mut global: ResMut<Global>,
   mut tick_reader: EventReader<ClientTickEvent>,
   mut position_query: Query<&mut Position>,
+  mut physics_state: ResMut<PhysicsState>,
+  mut rigidbody_set: ResMut<PhysicsSet<RigidBodySet>>,
+  mut collider_set: ResMut<PhysicsSet<ColliderSet>>,
 ) {
   let Some(predicted_entity) = global
         .owned_entity
@@ -267,6 +272,9 @@ pub fn tick_events(
       // Apply command
       shared_behavior::process_command(&command, &mut position);
     }
+
+    // Step Physics
+    shared_behavior::step_physics(Some(*client_tick), &mut physics_state, &mut rigidbody_set, &mut collider_set);
   }
 }
 

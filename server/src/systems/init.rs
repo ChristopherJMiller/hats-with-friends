@@ -8,7 +8,7 @@ use naia_bevy_server::{transport::webrtc, Server};
 use crate::resources::Global;
 
 pub fn init(mut commands: Commands, mut server: Server) {
-  info!("Naia Bevy Server Demo is running");
+  info!("Hats with Friends Server is Running");
 
   // Naia Server initialization
   let server_addresses = webrtc::ServerAddrs::new(

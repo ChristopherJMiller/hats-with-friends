@@ -75,14 +75,6 @@ pub fn init(
     ..Default::default()
   });
 
-  // ground plane
-  commands.spawn(PbrBundle {
-    mesh: meshes.add(shape::Plane::from_size(50.0).into()),
-    material: materials.add(Color::SILVER.into()),
-    transform: Transform::from_xyz(0.0, -10.0, 0.0),
-    ..Default::default()
-  });
-
   // Setup Global Resource
   let mut global = Global::default();
 

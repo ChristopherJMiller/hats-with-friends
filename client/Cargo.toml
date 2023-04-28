@@ -16,7 +16,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 bevy = "0.10"
 naia-bevy-client  = { version = "0.20", features = ["transport_webrtc"] }
-bevy_rapier3d = "0.21"
+rapier3d = { version = "0.17", features = [ "enhanced-determinism" ] }
 shared = { path = "../shared" }
 cfg-if = "1.0"
 rand = "0.8"
