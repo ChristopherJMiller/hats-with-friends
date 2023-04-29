@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::app::Tick;
+use crate::systems::Tick;
 
 #[derive(Resource)]
 pub enum ConnectionStatus {

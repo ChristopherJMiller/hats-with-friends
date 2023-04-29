@@ -11,7 +11,7 @@ use bevy::{
 use bevy_rapier3d::prelude::Collider;
 use shared::components::ColliderContainer;
 
-use crate::app::Tick as TickSet;
+use crate::systems::Tick as TickSet;
 
 use naia_bevy_client::events::*;
 use naia_bevy_client::ReceiveEvents;

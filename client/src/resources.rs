@@ -9,7 +9,7 @@ use bevy::render::mesh::Mesh;
 use naia_bevy_client::CommandHistory;
 use shared::messages::{Auth, VectorMoveCommand};
 
-use crate::systems::input::Controls;
+use crate::systems::gameplay::input::Controls;
 
 pub static SESSION_AUTH_DATA: RwLock<Option<Auth>> = RwLock::new(None);
 

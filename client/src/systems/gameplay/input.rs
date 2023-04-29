@@ -4,6 +4,7 @@ use shared::messages::VectorMoveCommand;
 
 use crate::components::{FollowPlayer, Player};
 use crate::resources::Global;
+use crate::systems::MainLoop;
 
 pub struct Controls {
   pub forward: [KeyCode; 2],
@@ -79,4 +80,11 @@ pub fn key_input(
   }
 }
 
-// TODO This needs an InputPlugin
+pub struct InputPlugin;
+
+impl Plugin for InputPlugin {
+  fn build(&self, app: &mut App) {
+    app
+      .add_system(key_input.in_set(MainLoop));
+  }
+}

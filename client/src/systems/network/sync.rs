@@ -1,12 +1,14 @@
 use bevy::ecs::{query::With, system::Query};
+use bevy::prelude::*;
 use bevy::transform::components::Transform;
 
 use naia_bevy_client::Client;
 use shared::components::Position;
 
 use crate::components::{Confirmed, Interp, Predicted};
+use crate::systems::MainLoop;
 
-pub fn sync_clientside_sprites(
+fn sync_clientside_sprites(
   client: Client,
   mut query: Query<(&Position, &mut Interp, &mut Transform), With<Predicted>>,
 ) {
@@ -23,7 +25,7 @@ pub fn sync_clientside_sprites(
   }
 }
 
-pub fn sync_serverside_sprites(
+fn sync_serverside_sprites(
   client: Client,
   mut query: Query<(&Position, &mut Interp, &mut Transform), With<Confirmed>>,
 ) {
@@ -37,5 +39,17 @@ pub fn sync_serverside_sprites(
     transform.translation.x = interp.interp_x;
     transform.translation.y = interp.interp_y;
     transform.translation.z = interp.interp_z;
+  }
+}
+
+pub struct SyncPlugin;
+
+impl Plugin for SyncPlugin {
+  fn build(&self, app: &mut bevy::prelude::App) {
+    app.add_systems(
+      (sync_clientside_sprites, sync_serverside_sprites)
+        .chain()
+        .in_set(MainLoop),
+    );
   }
 }
