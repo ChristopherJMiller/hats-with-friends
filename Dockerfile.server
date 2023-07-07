@@ -2,7 +2,7 @@ FROM docker.io/rust:buster as builder
 
 WORKDIR /build
 
-RUN apt-get update -y && apt-get install -y clang lld libasound2-dev libscrypt-dev libudev-dev libxcb-xfixes0-dev libxcb-shape0-dev cmake mesa
+RUN apt-get update -y && apt-get install -y clang lld libasound2-dev libscrypt-dev libudev-dev libxcb-xfixes0-dev libxcb-shape0-dev cmake mesa-vulkan-drivers
 
 # Add Files
 ADD client client
