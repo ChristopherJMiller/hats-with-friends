@@ -201,7 +201,7 @@
   integrity sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==
 
 "@vitejs/plugin-react-swc@^3.0.0":
-  version "3.3.0"
+  version "3.6.0"
   dependencies:
     "@swc/core" "^1.3.35"
 
