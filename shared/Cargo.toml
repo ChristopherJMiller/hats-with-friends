@@ -6,6 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.10"
+bevy = "0.13"
 naia-bevy-shared  = "0.20"
 bevy_rapier3d = { version = "0.21", features = ["enhanced-determinism", "serde-serialize"] }
